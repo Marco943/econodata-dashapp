@@ -1,6 +1,7 @@
-from dash import callback, register_page, Input, Output
+from dash import callback, register_page, Input, Output, State
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
+from werkzeug.security import generate_password_hash
 
 register_page(__name__, path="/register", title="Criar uma conta")
 

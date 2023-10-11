@@ -1,10 +1,9 @@
 from dash import Dash, html, dcc, page_container, Input, Output, State, callback
 import dash_mantine_components as dmc
-from flask_login import LoginManager, UserMixin
+from flask_login import LoginManager
 from flask_pymongo import PyMongo
 import os
-
-# from flask_sqlalchemy import SQLAlchemy
+from utils.models import User
 
 app = Dash(
     __name__,
@@ -15,26 +14,15 @@ app = Dash(
 )
 server = app.server
 server.config.update(SECRET_KEY=os.getenv("SECRET_KEY"))
-server.config.update(MONGO_URI=os.getenv("DB_USERS"))
+server.config.update(
+    MONGO_URI="mongodb+srv://Marco:efp6It13de0zJO8w@cluster0.lcdcwit.mongodb.net/Econodata?retryWrites=true&w=majority"
+)
 
 mongo = PyMongo(server)
 
 login_manager = LoginManager()
 login_manager.init_app(server)
 login_manager.login_view = "/login"
-
-
-class User(UserMixin):
-    def __init__(self, username, email, password, _id=None):
-        self.username = username
-        self.email = email
-        self.password = password
-        self.id = _id
-
-
-# db.init_app(server)
-# with server.app_context():
-#     db.create_all()
 
 
 @login_manager.user_loader
