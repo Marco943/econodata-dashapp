@@ -1,8 +1,10 @@
 from dash import Dash, html, dcc, page_container, Input, Output, State, callback
 import dash_mantine_components as dmc
 from flask_login import LoginManager, UserMixin
+from flask_pymongo import PyMongo
 import os
-from flask_sqlalchemy import SQLAlchemy
+
+# from flask_sqlalchemy import SQLAlchemy
 
 app = Dash(
     __name__,
@@ -13,35 +15,34 @@ app = Dash(
 )
 server = app.server
 server.config.update(SECRET_KEY=os.getenv("SECRET_KEY"))
-server.config.update(SQLALCHEMY_DATABASE_URI="sqlite:///database.db")
+server.config.update(MONGO_URI=os.getenv("DB_USERS"))
 
-db = SQLAlchemy()
+mongo = PyMongo(server)
 
 login_manager = LoginManager()
 login_manager.init_app(server)
 login_manager.login_view = "/login"
 
 
-class User(UserMixin, db.Model):
-    __tablename__ = "user"
+class User(UserMixin):
+    def __init__(self, username, email, password, _id=None):
+        self.username = username
+        self.email = email
+        self.password = password
+        self.id = _id
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
 
-
-db.init_app(server)
-with server.app_context():
-    db.create_all()
+# db.init_app(server)
+# with server.app_context():
+#     db.create_all()
 
 
 @login_manager.user_loader
 def load_user(username):
-    """
-    Função que carrega o usuário pelo id
-    """
-    return User(username)
+    user = mongo.db.Users.find_one({"name": username})
+    if not user:
+        return None
+    return User(username=user["name"])
 
 
 app.layout = dmc.MantineProvider(
@@ -74,12 +75,7 @@ app.layout = dmc.MantineProvider(
 )
 def register_new_user(username, email, pwd, pwd2, n):
     if n and username and email and pwd and pwd2:
-        user = User()
-        user.username = username
-        user.email = email
-        user.password = pwd
-        db.session.add(user)
-        db.session.commit()
+        mongo.db.Users.insert_one({"name": username, "email": email, "password": pwd})
         print("registrado")
         return "registrado"
 
