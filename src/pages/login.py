@@ -1,6 +1,11 @@
-from dash import Dash, html, dcc, callback, callback_context, register_page
+from dash import html, callback, register_page, Output, Input, State, no_update
+from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
+from flask_login import login_user
+from werkzeug.security import check_password_hash
+from utils.models import mongo, User
+from icecream import ic
 
 register_page(__name__, path="/login", title="Login")
 
@@ -19,12 +24,14 @@ login_card = dmc.Card(
                     label="Senha",
                     icon=DashIconify(icon="carbon:password"),
                 ),
+                dmc.Checkbox(id="login-chk-remember", label="Lembar", checked=False),
                 dmc.Button(
                     "Conectar-se",
                     id="login-btn",
                     fullWidth=True,
                     mt="1rem",
                     variant="solid",
+                    n_clicks=0,
                 ),
                 dmc.Group(
                     [
@@ -35,6 +42,7 @@ login_card = dmc.Card(
                     position="center",
                     mt="0.5rem",
                 ),
+                dmc.Text(id="login-feedback"),
             ]
         )
     ],
@@ -49,3 +57,29 @@ layout = html.Div(
         login_card,
     ]
 )
+
+
+@callback(
+    Output("url", "pathname", allow_duplicate=True),
+    Output("login-feedback", "children"),
+    Input("login-btn", "n_clicks"),
+    State("login-in-email", "value"),
+    State("login-in-pwd", "value"),
+    State("login-chk-remember", "checked"),
+    prevent_initial_call=True,
+)
+def login(n_clicks, email, password, remember):
+    if n_clicks:
+        find_user = mongo.db["Users"].find_one({"email": email})
+        if not find_user:
+            # Usuário não encontrado
+            return no_update, ["Usuário não encontrado"]
+        if not check_password_hash(find_user["password"], password):
+            # Senha errada
+            return no_update, ["Senha incorreta"]
+        else:
+            user = User(find_user["_id"], find_user["name"], find_user["email"])
+            login_user(user, remember=remember)
+            return "/", ["Logado com sucesso!"]
+    else:
+        raise PreventUpdate

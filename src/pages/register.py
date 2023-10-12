@@ -38,7 +38,7 @@ register_card = [
                         id="register-btn",
                         fullWidth=True,
                         mt="1rem",
-                        variant="gradient",
+                        variant="solid",
                     ),
                     dmc.Group(
                         [
@@ -55,8 +55,6 @@ register_card = [
         ],
         w=350,
         p="1rem",
-        shadow="sm",
-        radius="md",
     )
 ]
 

@@ -26,6 +26,7 @@ app = Dash(
     title="App Econodata",
     update_title=None,
     server=server,
+    prevent_initial_callbacks=True,
 )
 
 
@@ -34,7 +35,7 @@ def load_user(username):
     user = mongo.db["Users"].find_one({"name": username})
     if not user:
         return None
-    return User(username=user["name"])
+    return User(username=user["name"], email=user["email"])
 
 
 app.layout = dmc.MantineProvider(

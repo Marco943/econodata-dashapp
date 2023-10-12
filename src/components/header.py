@@ -1,9 +1,13 @@
 import dash_mantine_components as dmc
 from dash import callback, Output, Input, Patch
 from dash.exceptions import PreventUpdate
+from flask_login import current_user
 
-
-user_status_layout = dmc.Button("Login", id="btn-goto-login")
+if current_user:
+    if current_user.is_authenticated:
+        user_status_layout = dmc.Text(f"Olá, {current_user.name}")
+else:
+    user_status_layout = dmc.Button("Login", id="btn-goto-login")
 
 header_layout = dmc.Header(
     dmc.Stack(
@@ -47,7 +51,11 @@ def trocar_tema(checked):
     return patched_theme
 
 
-@callback(Output("url", "pathname"), Input("btn-goto-login", "n_clicks"))
+@callback(
+    Output("url", "pathname", allow_duplicate=True),
+    Input("btn-goto-login", "n_clicks"),
+    prevent_initial_call=True,
+)
 def redirecionar(n_clicks):
     if n_clicks:
         return "/login"
