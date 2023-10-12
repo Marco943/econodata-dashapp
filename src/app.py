@@ -1,9 +1,10 @@
-from dash import Dash, html, dcc, page_container
+from dash import Dash, html, dcc, page_container, callback, Output, Input
 import dash_mantine_components as dmc
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask import Flask
 import os
 from utils.models import mongo, User
+from components.header import header_layout
 
 server = Flask(__name__)
 
@@ -43,15 +44,23 @@ app.layout = dmc.MantineProvider(
         dmc.NotificationsProvider(
             [
                 html.Div(
-                    dmc.Container(page_container, fluid=True), style={"height": "100vh"}
+                    dmc.Container(
+                        [
+                            header_layout,
+                            html.Div(page_container, style={"padding-top": "60px"}),
+                        ],
+                        fluid=True,
+                    ),
+                    style={"height": "100vh"},
                 )
             ]
         ),
     ],
-    theme={"colorScheme": "light"},
+    theme={"colorScheme": "light", "primaryColor": "yellow"},
     id="mantine-main-provider",
     inherit=True,
     withGlobalStyles=True,
+    withNormalizeCSS=True,
 )
 
 
