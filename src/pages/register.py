@@ -1,7 +1,7 @@
-from dash import callback, register_page, Input, Output, State
+from dash import register_page, Output, Input, State, callback
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
-from werkzeug.security import generate_password_hash
+from utils.models import User
 
 register_page(__name__, path="/register", title="Criar uma conta")
 
@@ -61,3 +61,30 @@ register_card = [
 ]
 
 layout = register_card
+
+
+@callback(
+    Output("register-info", "value"),
+    State("register-in-user", "value"),
+    State("register-in-email", "value"),
+    State("register-in-pwd", "value"),
+    State("register-in-pwd2", "value"),
+    Input("register-btn", "n_clicks"),
+    prevent_initial_call=True,
+)
+def register_new_user(username, email, pwd, pwd2, n):
+    if not n:
+        print("Não clicado")
+    elif not username:
+        print("Sem nome de usuário")
+    elif not email:
+        # Lógica para validar email
+        print("Sem email")
+    elif not pwd:
+        # Lógica para validar senha
+        print("Sem senha")
+    elif not pwd2 or (pwd != pwd2):
+        print("Senhas não batem")
+    else:
+        new_user = User(username, email, pwd)
+        new_user.register_user()
