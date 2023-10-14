@@ -10,10 +10,29 @@ ALTURA_HEADER = 60
 
 def build_user_header():
     if current_user.is_authenticated:
-        user_status_layout = dmc.Group(
+        user_status_layout = dmc.Menu(
             [
-                dmc.Text(current_user.username),
-                dmc.Button("Sair", variant="link", id="logout-header-btn"),
+                dmc.MenuTarget(
+                    dmc.Button(
+                        current_user.username,
+                        variant="outline",
+                        rightIcon=DashIconify(icon="bxs:down-arrow"),
+                    )
+                ),
+                dmc.MenuDropdown(
+                    [
+                        dmc.MenuItem(
+                            "Configurações",
+                            icon=DashIconify(icon="solar:settings-bold"),
+                        ),
+                        dmc.MenuDivider(),
+                        dmc.MenuItem(
+                            "Sair",
+                            id="logout-header-btn",
+                            icon=DashIconify(icon="bxs:exit"),
+                        ),
+                    ]
+                ),
             ]
         )
     else:
@@ -26,7 +45,7 @@ header_layout = dmc.Header(
         [
             dmc.Grid(
                 [
-                    dmc.Col([dmc.Text("Econodata")], span="content"),
+                    dmc.Col([dmc.Title("Econodata", order=3)], span="content"),
                     dmc.Col(
                         dmc.Group(
                             [

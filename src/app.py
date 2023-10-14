@@ -6,8 +6,8 @@ from flask_pymongo import ObjectId
 import os
 from dotenv import dotenv_values, find_dotenv
 from utils.models import mongo, User
-from components.header import header_layout
-from components.header import ALTURA_HEADER
+from components.header import header_layout, ALTURA_HEADER
+from components.navbar import navbar_layout, LARGURA_NAVBAR
 from icecream import ic
 
 server = Flask(__name__)
@@ -52,9 +52,13 @@ app.layout = dmc.MantineProvider(
                     dmc.Container(
                         [
                             header_layout,
+                            navbar_layout,
                             html.Div(
                                 page_container,
-                                style={"padding-top": ALTURA_HEADER + 20},
+                                style={
+                                    "padding-top": ALTURA_HEADER + 20,
+                                    "padding-left": LARGURA_NAVBAR + 20,
+                                },
                             ),
                         ],
                         fluid=True,
