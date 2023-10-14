@@ -1,8 +1,11 @@
 import dash_mantine_components as dmc
 from dash import callback, Output, Input, Patch, html
 from dash.exceptions import PreventUpdate
+from dash_iconify import DashIconify
 from flask_login import current_user, logout_user
 from icecream import ic
+
+ALTURA_HEADER = 60
 
 
 def build_user_header():
@@ -29,9 +32,15 @@ header_layout = dmc.Header(
                             [
                                 html.Div(id="component-user-header"),
                                 dmc.Switch(
-                                    "Modo Escuro/Claro",
+                                    offLabel=DashIconify(
+                                        icon="radix-icons:moon", width=20
+                                    ),
+                                    onLabel=DashIconify(
+                                        icon="radix-icons:sun", width=20
+                                    ),
                                     id="switch-dark-light",
                                     checked=True,
+                                    size="md",
                                 ),
                             ]
                         ),
@@ -39,11 +48,14 @@ header_layout = dmc.Header(
                     ),
                 ],
                 justify="space-between",
+                align="center",
+                style={"height": ALTURA_HEADER, "margin": 0},
             )
         ],
-        justify="center",
+        justify="space-between",
+        style={"height": ALTURA_HEADER},
     ),
-    height=60,
+    height=ALTURA_HEADER,
     fixed=True,
 )
 
