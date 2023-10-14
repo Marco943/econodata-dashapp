@@ -2,13 +2,16 @@ from dash import Dash, html, dcc, page_container, callback, Output, Input
 import dash_mantine_components as dmc
 from flask_login import LoginManager, current_user
 from flask import Flask
+from flask_pymongo import ObjectId
 import os
+from dotenv import dotenv_values, find_dotenv
 from utils.models import mongo, User
 from components.header import header_layout
+from icecream import ic
 
 server = Flask(__name__)
 
-server.config.update(SECRET_KEY=os.getenv("SECRET_KEY"))
+server.config.update(SECRET_KEY="chavemegasecreta")
 server.config.update(
     MONGO_URI="mongodb+srv://Marco:efp6It13de0zJO8w@cluster0.lcdcwit.mongodb.net/Econodata?retryWrites=true&w=majority"
 )
@@ -31,11 +34,11 @@ app = Dash(
 
 
 @login_manager.user_loader
-def load_user(username):
-    user = mongo.db["Users"].find_one({"name": username})
+def load_user(user_id):
+    user = mongo.db["Users"].find_one({"_id": ObjectId(user_id)})
     if not user:
         return None
-    return User(username=user["name"], email=user["email"])
+    return User(_id=user["_id"], username=user["name"], email=user["email"])
 
 
 app.layout = dmc.MantineProvider(
@@ -66,4 +69,4 @@ app.layout = dmc.MantineProvider(
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

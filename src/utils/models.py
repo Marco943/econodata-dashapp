@@ -7,13 +7,10 @@ mongo = PyMongo()
 
 class User(UserMixin):
     def __init__(self, _id, username=None, email=None, password=None):
-        self.id = _id
+        self.id = str(_id)
         self.username = username
         self.email = email
         self.password = password
-
-    def is_authenticated(self):
-        return True
 
     def register_user(self):
         if not mongo.db["Users"].find_one({"name": self.email}):

@@ -1,13 +1,17 @@
 import dash_mantine_components as dmc
-from dash import callback, Output, Input, Patch
+from dash import callback, Output, Input, Patch, html
 from dash.exceptions import PreventUpdate
 from flask_login import current_user
+from icecream import ic
 
-if current_user:
+
+def build_user_header():
     if current_user.is_authenticated:
-        user_status_layout = dmc.Text(f"Olá, {current_user.name}")
-else:
-    user_status_layout = dmc.Button("Login", id="btn-goto-login")
+        user_status_layout = dmc.Text(f"Olá, {current_user.username}")
+    else:
+        user_status_layout = dmc.Button("Login", id="btn-goto-login")
+    return user_status_layout
+
 
 header_layout = dmc.Header(
     dmc.Stack(
@@ -18,7 +22,7 @@ header_layout = dmc.Header(
                     dmc.Col(
                         dmc.Group(
                             [
-                                user_status_layout,
+                                html.Div(id="component-user-header"),
                                 dmc.Switch(
                                     "Modo Escuro/Claro",
                                     id="switch-dark-light",
@@ -61,3 +65,8 @@ def redirecionar(n_clicks):
         return "/login"
     else:
         raise PreventUpdate
+
+
+@callback(Output("component-user-header", "children"), Input("url", "pathname"))
+def update_user_header(url):
+    return build_user_header()

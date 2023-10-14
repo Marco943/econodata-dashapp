@@ -2,7 +2,7 @@ from dash import html, callback, register_page, Output, Input, State, no_update
 from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
-from flask_login import login_user
+from flask_login import login_user, current_user
 from werkzeug.security import check_password_hash
 from utils.models import mongo, User
 from icecream import ic
@@ -79,7 +79,8 @@ def login(n_clicks, email, password, remember):
             return no_update, ["Senha incorreta"]
         else:
             user = User(find_user["_id"], find_user["name"], find_user["email"])
-            login_user(user, remember=remember)
+            login_user(user, remember=remember, force=True)
+            print(current_user.username)
             return "/", ["Logado com sucesso!"]
     else:
         raise PreventUpdate
