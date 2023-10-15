@@ -14,8 +14,8 @@ def build_user_header():
             [
                 dmc.MenuTarget(
                     dmc.Button(
-                        current_user.username,
-                        variant="outline",
+                        current_user.nome,
+                        variant="light",
                         rightIcon=DashIconify(icon="bxs:down-arrow"),
                     )
                 ),

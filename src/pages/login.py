@@ -24,7 +24,12 @@ login_card = dmc.Card(
                     label="Senha",
                     icon=DashIconify(icon="carbon:password"),
                 ),
-                dmc.Checkbox(id="login-chk-remember", label="Lembar", checked=False),
+                dmc.Checkbox(
+                    id="login-chk-remember",
+                    label="Lembar de mim",
+                    checked=False,
+                    pt="1rem",
+                ),
                 dmc.Button(
                     "Conectar-se",
                     id="login-btn",
@@ -36,9 +41,9 @@ login_card = dmc.Card(
                 dmc.Group(
                     [
                         dmc.Text("Não tem conta?", size=12),
-                        dmc.Anchor("Crie uma", href="/register", size=12),
+                        dmc.Anchor("Crie uma", href="/signup", size=12),
                     ],
-                    spacing=2,
+                    spacing=5,
                     position="center",
                     mt="0.5rem",
                 ),
@@ -74,13 +79,19 @@ def login(n_clicks, email, password, remember):
         if not find_user:
             # Usuário não encontrado
             return no_update, ["Usuário não encontrado"]
-        if not check_password_hash(find_user["password"], password):
+        if not check_password_hash(find_user["senha"], password):
             # Senha errada
             return no_update, ["Senha incorreta"]
         else:
-            user = User(find_user["_id"], find_user["name"], find_user["email"])
+            user = User(
+                find_user["_id"],
+                find_user["nome"],
+                find_user["sobrenome"],
+                find_user["cpf"],
+                find_user["email"],
+                None,
+            )
             login_user(user, remember=remember, force=True)
-            print(current_user.username)
             return "/", ["Logado com sucesso!"]
     else:
         raise PreventUpdate

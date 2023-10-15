@@ -6,21 +6,28 @@ mongo = PyMongo()
 
 
 class User(UserMixin):
-    def __init__(self, _id, username=None, email=None, password=None):
+    def __init__(
+        self, _id=None, nome=None, sobrenome=None, cpf=None, email=None, senha=None
+    ):
         self.id = str(_id)
-        self.username = username
+        self.nome = nome
+        self.sobrenome = sobrenome
+        self.cpf = cpf
         self.email = email
-        self.password = password
+        self.senha = senha
 
-    def register_user(self):
-        if not mongo.db["Users"].find_one({"name": self.email}):
+    def signup(self) -> bool:
+        if not mongo.db["Users"].find_one({"email": self.email}):
             mongo.db["Users"].insert_one(
                 {
-                    "name": self.username,
+                    "nome": self.nome,
+                    "sobrenome": self.sobrenome,
+                    "cpf": self.cpf,
                     "email": self.email,
-                    "password": generate_password_hash(self.password),
-                    "admin": 0,
+                    "senha": generate_password_hash(self.senha),
+                    "admin": False,
+                    "membro": False,
                 }
             )
-            return "success"
-        return "fail"
+            return True
+        return False

@@ -11,4 +11,4 @@ def layout():
         return no_permission_layout
 
     else:
-        return [dmc.Text(f"Seja bem-vindo, {current_user.username}")]
+        return [dmc.Text(f"Seja bem-vindo, {current_user.nome}")]

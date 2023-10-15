@@ -6,7 +6,7 @@ no_permission_layout = [
         [
             dmc.Anchor("Conecte-se", href="/login"),
             dmc.Text("ou"),
-            dmc.Anchor("Crie uma conta", href="/register"),
+            dmc.Anchor("Crie uma conta", href="/signup"),
         ],
         spacing=5,
         mt="1rem",
