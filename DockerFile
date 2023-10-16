@@ -1,0 +1,12 @@
+FROM python:3.10.13
+
+ENV PYTHONUNBUFFERED 1
+ENV APP_HOME /app
+
+WORKDIR $APP_HOME
+COPY src ./
+
+RUN pip install -r requirements.txt
+RUN pip install gunicorn
+
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:server
