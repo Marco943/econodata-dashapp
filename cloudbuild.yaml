@@ -11,5 +11,5 @@ steps:
   - '--allow-unauthenticated'
 artifacts:
   objects:
-  location: 'gs://app_dev_stage'
-  paths: ['*']
+    location: 'gs://app_dev_stage'
+    paths: ['*']
