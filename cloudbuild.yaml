@@ -6,6 +6,8 @@ steps:
   - 'cloudrunservice'
   - '--image'
   - 'gcr.io/econodata/app_econodata_dev'
+  - '--region'
+  - 'us-central1'
   - '--platform'
   - 'managed'
   - '--allow-unauthenticated'

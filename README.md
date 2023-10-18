@@ -13,7 +13,7 @@ steps:
     - '--allow-unauthenticated'
 artifacts:
     objects:
-    location: 'gs://example-bucket'
-    paths: ['*']
+        location: 'gs://example-bucket'
+        paths: ['*']
 
 gcloud builds submit --gcs-source-staging-dir="gs://example-bucket/cloudbuild-custom" --config cloudbuild.yaml
