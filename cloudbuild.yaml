@@ -1,0 +1,15 @@
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - 'cloudrunservice'
+  - '--image'
+  - 'gcr.io/econodata/app_econodata_dev'
+  - '--platform'
+  - 'managed'
+  - '--allow-unauthenticated'
+artifacts:
+  objects:
+  location: 'gs://app_dev_stage'
+  paths: ['*']
