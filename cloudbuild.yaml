@@ -5,7 +5,7 @@ steps:
   - 'deploy'
   - 'cloudrunservice'
   - '--image'
-  - 'gcr.io/econodata/app_econodata_dev'
+  - 'gcr.io/econodata/app_dev_stage'
   - '--region'
   - 'us-central1'
   - '--platform'
