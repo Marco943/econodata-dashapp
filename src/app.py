@@ -8,7 +8,7 @@ import dash_mantine_components as dmc
 
 from utils.models import mongo, User
 from components.header import header_layout, ALTURA_HEADER
-from components.navbar import navbar_layout, LARGURA_NAVBAR
+from components.navbar import navbar_layout, drawer_navbar_layout, LARGURA_NAVBAR
 from icecream import ic
 
 server = Flask(__name__)
@@ -35,7 +35,10 @@ app = Dash(
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = mongo.db["Users"].find_one({"_id": ObjectId(user_id)})
+    user = mongo.db["Users"].find_one(
+        {"_id": ObjectId(user_id)},
+        {campo: 1 for campo in ["nome", "sobrenome", "cpf", "email"]},
+    )
     if not user:
         return None
     return User(
@@ -45,7 +48,7 @@ def load_user(user_id):
 
 app.layout = dmc.MantineProvider(
     [
-        dcc.Store(id="theme-store", storage_type="local"),
+        dcc.Store(id="theme-store", storage_type="session"),
         dcc.Location(id="url", refresh="callback-nav"),
         dmc.NotificationsProvider(
             [
@@ -53,16 +56,19 @@ app.layout = dmc.MantineProvider(
                     dmc.Container(
                         [
                             header_layout,
-                            navbar_layout,
+                            navbar_layout(),
+                            drawer_navbar_layout(),
                             html.Div(
-                                page_container,
-                                style={
-                                    "padding-top": ALTURA_HEADER + 20,
-                                    "padding-left": LARGURA_NAVBAR + 20,
-                                },
+                                dmc.Container(
+                                    page_container,
+                                    size="lg",
+                                    pt=ALTURA_HEADER + 20,
+                                ),
+                                id="wrapper",
                             ),
                         ],
                         fluid=True,
+                        px=0,
                     ),
                     style={"height": "100vh"},
                 )
@@ -78,4 +84,4 @@ app.layout = dmc.MantineProvider(
 
 
 if __name__ == "__main__":
-    server.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True)

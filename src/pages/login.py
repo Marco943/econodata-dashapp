@@ -4,8 +4,9 @@ import dash_mantine_components as dmc
 from dash_iconify import DashIconify
 from flask_login import login_user, current_user
 from werkzeug.security import check_password_hash
-from utils.models import mongo, User
 from icecream import ic
+from utils.models import mongo, User
+from components.already_logged import already_logged_layout
 
 register_page(__name__, path="/login", title="Login")
 
@@ -55,13 +56,18 @@ login_card = dmc.Card(
     w=350,
 )
 
-layout = html.Div(
-    [
-        dmc.Title("Bem-vindo!", order=1),
-        dmc.Text("Entre na sua conta para continuar", size="sm"),
-        login_card,
-    ]
-)
+
+def layout():
+    if not current_user.is_authenticated:
+        return html.Div(
+            [
+                dmc.Title("Bem-vindo!", order=1),
+                dmc.Text("Entre na sua conta para continuar", size="sm"),
+                login_card,
+            ]
+        )
+    else:
+        return already_logged_layout
 
 
 @callback(
@@ -75,13 +81,18 @@ layout = html.Div(
 )
 def login(n_clicks, email, password, remember):
     if n_clicks:
-        find_user = mongo.db["Users"].find_one({"email": email})
+        find_user = mongo.db["Users"].find_one(
+            {"email": email},
+            {campo: 1 for campo in ["nome", "sobrenome", "cpf", "email"]},
+        )
         if not find_user:
-            # Usuário não encontrado
-            return no_update, ["Usuário não encontrado"]
+            return no_update, [
+                dmc.Alert("Usuário não encontrado!", color="red", variant="filled")
+            ]
         if not check_password_hash(find_user["senha"], password):
-            # Senha errada
-            return no_update, ["Senha incorreta"]
+            return no_update, [
+                dmc.Alert("Senha incorreta!", color="red", variant="filled")
+            ]
         else:
             user = User(
                 find_user["_id"],
@@ -92,6 +103,8 @@ def login(n_clicks, email, password, remember):
                 None,
             )
             login_user(user, remember=remember, force=True)
-            return "/", ["Logado com sucesso!"]
+            return "/", [
+                dmc.Alert("Logado com sucesso!", color="green", variant="filled")
+            ]
     else:
         raise PreventUpdate

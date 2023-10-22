@@ -2,8 +2,10 @@ from dash import register_page, Output, Input, State, callback, html
 from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
 from dash_iconify import DashIconify
+from flask_login import current_user
 from utils.models import User
 from utils.validacoes import validar_email, validar_senha, validar_cpf
+from components.already_logged import already_logged_layout
 
 register_page(__name__, path="/signup", title="Criar uma conta")
 
@@ -78,7 +80,12 @@ signup_card = [
     )
 ]
 
-layout = signup_card
+
+def layout():
+    if not current_user.is_authenticated:
+        return signup_card
+    else:
+        return already_logged_layout
 
 
 @callback(
@@ -97,10 +104,10 @@ def signup_new_user(nome, sobrenome, cpf, email, senha, senha2, n):
         raise PreventUpdate
     elif not (nome or sobrenome or cpf or email or senha or senha2):
         return [dmc.Alert("Preencha todos os campos", color="red", variant="filled")]
-    elif not validar_email(email):
-        return [dmc.Alert("Email inválido", color="red", variant="filled")]
     elif not validar_cpf(cpf):
         return [dmc.Alert("CPF inválido", color="red", variant="filled")]
+    elif not validar_email(email):
+        return [dmc.Alert("Email inválido", color="red", variant="filled")]
     elif not validar_senha(senha):
         return [dmc.Alert("Senha fraca", color="red", variant="filled")]
     elif not senha == senha2:
