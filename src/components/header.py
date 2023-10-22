@@ -1,5 +1,5 @@
 import dash_mantine_components as dmc
-from dash import callback, Output, Input, Patch, html
+from dash import callback, Output, Input, Patch, html, clientside_callback, State
 from dash.exceptions import PreventUpdate
 from dash_iconify import DashIconify
 from flask_login import current_user, logout_user
@@ -45,7 +45,22 @@ header_layout = dmc.Header(
         [
             dmc.Grid(
                 [
-                    dmc.Col([dmc.Title("Econodata", order=3)], span="content"),
+                    dmc.MediaQuery(
+                        dmc.Col(
+                            dmc.ActionIcon(
+                                DashIconify(icon="radix-icons:hamburger-menu"),
+                                id="btn-hamburger",
+                            ),
+                            id="col-hamburger",
+                            span="auto",
+                        ),
+                        largerThan=1201,
+                        styles={"display": "none"},
+                    ),
+                    dmc.Col(
+                        dmc.Title("Econ", color="yellow", order=2), span="content", pr=0
+                    ),
+                    dmc.Col(dmc.Title("odata", order=2), span="auto", pl=0),
                     dmc.Col(
                         dmc.Group(
                             [
@@ -57,7 +72,7 @@ header_layout = dmc.Header(
                                     onLabel=DashIconify(
                                         icon="radix-icons:sun", width=20
                                     ),
-                                    id="switch-dark-light",
+                                    id="switch-theme",
                                     checked=True,
                                     size="md",
                                 ),
@@ -78,17 +93,36 @@ header_layout = dmc.Header(
     fixed=True,
 )
 
-
-@callback(
-    Output("mantine-main-provider", "theme"), Input("switch-dark-light", "checked")
+clientside_callback(
+    """function(n_clicks) { return true }""",
+    Output("drawer-navbar", "opened"),
+    Input("btn-hamburger", "n_clicks"),
+    prevent_initial_call=True,
 )
-def trocar_tema(checked):
-    patched_theme = Patch()
-    if checked:
-        patched_theme["colorScheme"] = "light"
-    else:
-        patched_theme["colorScheme"] = "dark"
-    return patched_theme
+
+clientside_callback(
+    """ function(data) { return data } """,
+    Output("mantine-main-provider", "theme"),
+    Input("theme-store", "data"),
+)
+
+clientside_callback(
+    """function(checked, data) {
+        if (data) {
+            var primarycolor = data["primaryColor"];
+            if (checked) {
+                return { colorScheme: "light", primaryColor: primarycolor }
+            } else {
+                return {colorScheme: "dark", primaryColor: primarycolor }
+            }
+        } else {
+            return { colorScheme: "light", primaryColor: "yellow" }
+        }
+    }""",
+    Output("theme-store", "data"),
+    Input("switch-theme", "checked"),
+    State("theme-store", "data"),
+)
 
 
 @callback(
