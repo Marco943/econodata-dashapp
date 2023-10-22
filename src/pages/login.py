@@ -83,7 +83,7 @@ def login(n_clicks, email, password, remember):
     if n_clicks:
         find_user = mongo.db["Users"].find_one(
             {"email": email},
-            {campo: 1 for campo in ["nome", "sobrenome", "cpf", "email"]},
+            {campo: 1 for campo in ["nome", "sobrenome", "cpf", "email", "senha"]},
         )
         if not find_user:
             return no_update, [

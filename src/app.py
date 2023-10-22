@@ -13,8 +13,8 @@ from icecream import ic
 
 server = Flask(__name__)
 load_dotenv(override=True)
-server.config.update(SECRET_KEY=os.getenv("SECRET_KEY"))
-server.config.update(MONGO_URI=os.getenv("DB_ECONODATA"))
+server.config.update(SECRET_KEY=os.environ.get("SECRET_KEY"))
+server.config.update(MONGO_URI=os.environ.get("DB_ECONODATA"))
 
 mongo.init_app(server)
 
@@ -84,4 +84,5 @@ app.layout = dmc.MantineProvider(
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    server.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
