@@ -36,58 +36,64 @@ def build_user_header():
             ]
         )
     else:
-        user_status_layout = dmc.Button("Login", id="btn-goto-login")
+        user_status_layout = html.Div()
     return user_status_layout
 
 
 header_layout = dmc.Header(
-    dmc.Stack(
+    dmc.Grid(
         [
-            dmc.Grid(
-                [
-                    dmc.MediaQuery(
-                        dmc.Col(
-                            dmc.ActionIcon(
-                                DashIconify(icon="radix-icons:hamburger-menu"),
-                                id="btn-hamburger",
-                            ),
-                            id="col-hamburger",
-                            span="auto",
+            dmc.Col(
+                dmc.Anchor(
+                    [
+                        dmc.Title(
+                            "Econ",
+                            order=2,
+                            color="yellow",
+                            display="inline",
                         ),
-                        largerThan=1201,
-                        styles={"display": "none"},
+                        dmc.Title("odata", display="inline", order=2),
+                    ],
+                    size="xl",
+                    href="/",
+                    underline=False,
+                    variant="text",
+                ),
+                span="content",
+            ),
+            dmc.MediaQuery(
+                dmc.Col(
+                    dmc.ActionIcon(
+                        DashIconify(icon="radix-icons:hamburger-menu"),
+                        id="btn-hamburger",
                     ),
-                    dmc.Col(
-                        dmc.Title("Econ", color="yellow", order=2), span="content", pr=0
-                    ),
-                    dmc.Col(dmc.Title("odata", order=2), span="auto", pl=0),
-                    dmc.Col(
-                        dmc.Group(
-                            [
-                                html.Div(id="component-user-header"),
-                                dmc.Switch(
-                                    offLabel=DashIconify(
-                                        icon="radix-icons:moon", width=20
-                                    ),
-                                    onLabel=DashIconify(
-                                        icon="radix-icons:sun", width=20
-                                    ),
-                                    id="switch-theme",
-                                    checked=True,
-                                    size="md",
-                                ),
-                            ]
+                    id="col-hamburger",
+                    span="content",
+                ),
+                largerThan=1201,
+                styles={"display": "none"},
+            ),
+            dmc.Col(span="auto"),
+            dmc.Col(
+                dmc.Group(
+                    [
+                        html.Div(id="component-user-header"),
+                        dmc.Switch(
+                            offLabel=DashIconify(icon="radix-icons:moon", width=20),
+                            onLabel=DashIconify(icon="radix-icons:sun", width=20),
+                            id="switch-theme",
+                            checked=True,
+                            size="md",
                         ),
-                        span="content",
-                    ),
-                ],
-                justify="space-between",
-                align="center",
-                style={"height": ALTURA_HEADER, "margin": 0},
-            )
+                    ]
+                ),
+                span="content",
+            ),
+            html.Div(id="timer-logout"),
         ],
         justify="space-between",
-        style={"height": ALTURA_HEADER},
+        align="center",
+        style={"height": ALTURA_HEADER, "margin": 0},
     ),
     height=ALTURA_HEADER,
     fixed=True,
@@ -125,31 +131,20 @@ clientside_callback(
 )
 
 
-@callback(
-    Output("url", "pathname", allow_duplicate=True),
-    Input("btn-goto-login", "n_clicks"),
-    prevent_initial_call=True,
-)
-def redirecionar(n_clicks):
-    if n_clicks:
-        return "/login"
-    else:
-        raise PreventUpdate
-
-
 @callback(Output("component-user-header", "children"), Input("url", "pathname"))
 def update_user_header(url):
     return build_user_header()
 
 
 @callback(
-    Output("url", "pathname", allow_duplicate=True),
+    Output("timer-logout", "children", allow_duplicate=True),
     Input("logout-header-btn", "n_clicks"),
     prevent_initial_call=True,
 )
 def logout(n_clicks):
     if n_clicks:
         logout_user()
-        return "/login"
+        # Força um refresh
+        return html.Meta(httpEquiv="refresh", content=0.1)
     else:
         raise PreventUpdate
