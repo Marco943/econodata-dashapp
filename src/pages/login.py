@@ -103,7 +103,7 @@ def login(n_clicks, email, password, remember):
                 None,
             )
             login_user(user, remember=remember, force=True)
-            return "/", [
+            return "/user/dashboard", [
                 dmc.Alert("Logado com sucesso!", color="green", variant="filled")
             ]
     else:

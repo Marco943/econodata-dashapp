@@ -3,12 +3,13 @@
     padding-left: 20px;
 }
 
-#wrapper {
+.content {
     margin-left: 200px;
+    margin-top: 60px;
 }
 
 @media only screen and (max-width: 1200px) {
-    #wrapper {
+    .content {
         margin-left: 0;
     }
 }

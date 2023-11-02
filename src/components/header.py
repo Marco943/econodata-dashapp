@@ -40,64 +40,65 @@ def build_user_header():
     return user_status_layout
 
 
-header_layout = dmc.Header(
-    dmc.Grid(
-        [
-            dmc.Col(
-                dmc.Anchor(
-                    [
-                        dmc.Title(
-                            "Econ",
-                            order=2,
-                            color="yellow",
-                            display="inline",
-                        ),
-                        dmc.Title("odata", display="inline", order=2),
-                    ],
-                    size="xl",
-                    href="/",
-                    underline=False,
-                    variant="text",
-                ),
-                span="content",
-            ),
-            dmc.MediaQuery(
+def header_layout():
+    return dmc.Header(
+        dmc.Grid(
+            [
                 dmc.Col(
-                    dmc.ActionIcon(
-                        DashIconify(icon="radix-icons:hamburger-menu"),
-                        id="btn-hamburger",
+                    dmc.Anchor(
+                        [
+                            dmc.Title(
+                                "Econo",
+                                order=2,
+                                color="yellow",
+                                display="inline",
+                            ),
+                            dmc.Title("data", display="inline", order=2),
+                        ],
+                        size="xl",
+                        href="/",
+                        underline=False,
+                        variant="text",
                     ),
-                    id="col-hamburger",
                     span="content",
                 ),
-                largerThan=1201,
-                styles={"display": "none"},
-            ),
-            dmc.Col(span="auto"),
-            dmc.Col(
-                dmc.Group(
-                    [
-                        html.Div(id="component-user-header"),
-                        dmc.Switch(
-                            offLabel=DashIconify(icon="radix-icons:moon", width=20),
-                            onLabel=DashIconify(icon="radix-icons:sun", width=20),
-                            id="switch-theme",
-                            checked=True,
-                            size="md",
+                dmc.MediaQuery(
+                    dmc.Col(
+                        dmc.ActionIcon(
+                            DashIconify(icon="radix-icons:hamburger-menu"),
+                            id="btn-hamburger",
                         ),
-                    ]
+                        id="col-hamburger",
+                        span="content",
+                    ),
+                    largerThan=1201,
+                    styles={"display": "none"},
                 ),
-                span="content",
-            ),
-            html.Div(id="timer-logout"),
-        ],
-        justify="space-between",
-        align="center",
-        style={"height": ALTURA_HEADER, "margin": 0},
-    ),
-    height=ALTURA_HEADER,
-    fixed=True,
-)
+                dmc.Col(span="auto"),
+                dmc.Col(
+                    dmc.Group(
+                        [
+                            html.Div(id="component-user-header"),
+                            dmc.ActionIcon(
+                                DashIconify(icon="gg:dark-mode", width=20),
+                                id="switch-theme",
+                                size=36,
+                                radius=30,
+                            ),
+                        ]
+                    ),
+                    span="content",
+                ),
+                html.Div(id="timer-logout"),
+            ],
+            justify="space-between",
+            align="center",
+            style={"height": ALTURA_HEADER, "margin": 0},
+        ),
+        height=ALTURA_HEADER,
+        fixed=True,
+    )
+
 
 clientside_callback(
     """function(n_clicks) { return true }""",
@@ -113,20 +114,19 @@ clientside_callback(
 )
 
 clientside_callback(
-    """function(checked, data) {
+    """function(n_clicks, data) {
         if (data) {
-            var primarycolor = data["primaryColor"];
-            if (checked) {
-                return { colorScheme: "light", primaryColor: primarycolor }
-            } else {
-                return {colorScheme: "dark", primaryColor: primarycolor }
+            if (n_clicks) {
+                const scheme = data["colorScheme"] == "dark" ? "light" : "dark"
+                return { colorScheme: scheme, primaryColor:"yellow" } 
             }
+            return dash_clientside.no_update
         } else {
-            return { colorScheme: "light", primaryColor: "yellow" }
+            return { colorScheme: "light", primaryColor:"yellow" }
         }
     }""",
     Output("theme-store", "data"),
-    Input("switch-theme", "checked"),
+    Input("switch-theme", "n_clicks"),
     State("theme-store", "data"),
 )
 

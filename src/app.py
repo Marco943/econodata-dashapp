@@ -2,13 +2,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from flask import Flask, redirect, request
-from flask_login import (
-    LoginManager,
-    current_user,
-    login_user,
-    login_required,
-    logout_user,
-)
+from flask_login import LoginManager
 from flask_pymongo import ObjectId
 from dash import Dash, html, dcc, page_container, callback, Output, Input
 import dash_mantine_components as dmc
@@ -37,26 +31,9 @@ app = Dash(
     update_title=None,
     server=False,
     prevent_initial_callbacks=True,
-    url_base_pathname="/user/",
 )
 
 app.init_app(server)
-
-# Protege as páginas, exigindo que esteja logado
-for view_func in server.view_functions:
-    if view_func.startswith(app.config.url_base_pathname):
-        server.view_functions[view_func] = login_required(
-            server.view_functions[view_func]
-        )
-
-# @server.route("/user", methods=["GET"])
-# @login_required
-# def dash_app():
-#     ic()
-#     if current_user.is_authenticated:
-#         return redirect("/user")
-#     else:
-#         return redirect("/")
 
 
 @login_manager.user_loader
@@ -72,47 +49,15 @@ def load_user(user_id):
     )
 
 
-@server.route("/")
-def home():
-    return "Página raiz"
-
-
-@server.route("/login")
-def logar():
-    login_user(
-        User(ObjectId("6528520216383e80d1138f7f"), "Marco", "Antônio", "110", "macto")
-    )
-    return f"Logado como {current_user.nome}"
-
-
-@server.route("/sair")
-def logout():
-    logout_user()
-    return "Deslogado"
-
-
 app.layout = dmc.MantineProvider(
     [
-        dcc.Store(id="theme-store", storage_type="session"),
-        dcc.Location(id="url", refresh="callback-nav"),
+        dcc.Store(id="theme-store", storage_type="local"),
+        dcc.Location(id="url", refresh=True),
         dmc.NotificationsProvider(
             [
                 html.Div(
                     dmc.Container(
-                        [
-                            navbar_layout(),
-                            drawer_navbar_layout(),
-                            header_layout,
-                            html.Div(
-                                dmc.Container(
-                                    html.Div(page_container, id="wrapper"),
-                                    size="lg",
-                                    pt=ALTURA_HEADER + 20,
-                                    mx=0,
-                                    px=20,
-                                ),
-                            ),
-                        ],
+                        page_container,
                         fluid=True,
                         px=0,
                     ),

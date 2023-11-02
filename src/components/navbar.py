@@ -69,5 +69,5 @@ def drawer_navbar_layout():
         opened=False,
         zIndex=100000,
         size=300,
-        transitionDuration=0,
+        transitionDuration=100,
     )
