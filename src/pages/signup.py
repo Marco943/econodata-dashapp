@@ -1,11 +1,11 @@
-from dash import register_page, Output, Input, State, callback, html
-from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
+from components.already_logged import already_logged_layout
+from dash import Input, Output, State, callback, html, register_page
+from dash.exceptions import PreventUpdate
 from dash_iconify import DashIconify
 from flask_login import current_user
-from utils.models import User
-from utils.validacoes import validar_email, validar_senha, validar_cpf
-from components.already_logged import already_logged_layout
+from pydantic import ValidationError
+from utils.models import NovoUsuario, Usuario
 
 register_page(__name__, path="/signup", title="Criar uma conta")
 
@@ -102,22 +102,16 @@ def layout():
 def signup_new_user(nome, sobrenome, cpf, email, senha, senha2, n):
     if not n:
         raise PreventUpdate
-    elif not (nome or sobrenome or cpf or email or senha or senha2):
-        return [dmc.Alert("Preencha todos os campos", color="red", variant="filled")]
-    elif not validar_cpf(cpf):
-        return [dmc.Alert("CPF inválido", color="red", variant="filled")]
-    elif not validar_email(email):
-        return [dmc.Alert("Email inválido", color="red", variant="filled")]
-    elif not validar_senha(senha):
-        return [dmc.Alert("Senha fraca", color="red", variant="filled")]
-    elif not senha == senha2:
-        return [dmc.Alert("As senhas não são iguais", color="red", variant="filled")]
+    try:
+        new_user = NovoUsuario(
+            nome=nome, sobrenome=sobrenome, cpf=cpf, email=email, senha=senha
+        )
+    except ValidationError as e:
+        erro = e.errors()[0]
+        return [dmc.Alert(erro["msg"], color="red", variant="filled")]
+
+    status_registro = new_user.registrar()
+    if status_registro:
+        return [dmc.Alert("Registrado com sucesso", color="green", variant="filled")]
     else:
-        new_user = User(None, nome, sobrenome, cpf, email, senha)
-        status_signup = new_user.signup()
-        if status_signup:
-            return [
-                dmc.Alert("Registrado com sucesso", color="green", variant="filled")
-            ]
-        else:
-            return [dmc.Alert("Email já cadastrado", color="red", variant="filled")]
+        return [dmc.Alert("Email já cadastrado", color="red", variant="filled")]

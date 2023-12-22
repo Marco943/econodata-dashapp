@@ -1,12 +1,22 @@
-from dash import html, callback, register_page, Output, Input, State, no_update
-from dash.exceptions import PreventUpdate
 import dash_mantine_components as dmc
-from dash_iconify import DashIconify
-from flask_login import login_user, current_user
-from werkzeug.security import check_password_hash
-from icecream import ic
-from utils.models import mongo, User
 from components.already_logged import already_logged_layout
+from dash import (
+    Input,
+    Output,
+    State,
+    callback,
+    clientside_callback,
+    html,
+    no_update,
+    register_page,
+)
+from dash.exceptions import PreventUpdate
+from dash_iconify import DashIconify
+from flask_login import current_user, login_user
+from icecream import ic
+from pydantic import ValidationError
+from utils.models import Usuario, mongo
+from werkzeug.security import check_password_hash
 
 register_page(__name__, path="/login", title="Login")
 
@@ -79,32 +89,14 @@ def layout():
     State("login-chk-remember", "checked"),
     prevent_initial_call=True,
 )
-def login(n_clicks, email, password, remember):
-    if n_clicks:
-        find_user = mongo.db["Users"].find_one(
-            {"email": email},
-            {campo: 1 for campo in ["nome", "sobrenome", "cpf", "email", "senha"]},
-        )
-        if not find_user:
-            return no_update, [
-                dmc.Alert("Usuário não encontrado!", color="red", variant="filled")
-            ]
-        if not check_password_hash(find_user["senha"], password):
-            return no_update, [
-                dmc.Alert("Senha incorreta!", color="red", variant="filled")
-            ]
-        else:
-            user = User(
-                find_user["_id"],
-                find_user["nome"],
-                find_user["sobrenome"],
-                find_user["cpf"],
-                find_user["email"],
-                None,
-            )
-            login_user(user, remember=remember, force=True)
-            return "/user/dashboard", [
-                dmc.Alert("Logado com sucesso!", color="green", variant="filled")
-            ]
-    else:
+def login(n_clicks, email, senha, remember):
+    if not n_clicks:
         raise PreventUpdate
+    try:
+        usuario = Usuario().buscar(email, senha)
+    except ValidationError as e:
+        return no_update, [
+            dmc.Alert(e.errors()[0]["msg"], color="red", variant="filled", mt="1rem")
+        ]
+    login_user(usuario, remember=remember, force=True)
+    return "/user/dashboard", [no_update]
