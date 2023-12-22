@@ -1,5 +1,5 @@
 import dash_mantine_components as dmc
-from dash import callback, Output, Input, Patch, html, clientside_callback, State
+from dash import Input, Output, Patch, State, callback, clientside_callback, html
 from dash.exceptions import PreventUpdate
 from dash_iconify import DashIconify
 from flask_login import current_user, logout_user
@@ -128,6 +128,7 @@ clientside_callback(
     Output("theme-store", "data"),
     Input("switch-theme", "n_clicks"),
     State("theme-store", "data"),
+    prevent_initial_call=True,
 )
 
 
