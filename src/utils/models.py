@@ -95,20 +95,18 @@ class Usuario(BaseModel, UserMixin):
         return str(self._id)
 
     def buscar(self, email: str, senha: str):
+        assert email != "" and senha != "", "Preencha todos os campos"
         usuario = mongo.db["Users"].find_one(
             {"email": email},
             {campo: 1 for campo in ["nome", "sobrenome", "cpf", "email", "senha"]},
         )
-        if not usuario:
-            raise ValueError("Usuário não encontrado")
-        if not check_password_hash(usuario["senha"], senha):
-            raise ValueError("Senha incorreta")
+        assert usuario, "Usuário não encontrado"
+        assert check_password_hash(usuario["senha"], senha), "Senha incorreta"
         self._id = usuario["_id"]
         self.nome = usuario["nome"]
         self.sobrenome = usuario["sobrenome"]
         self.cpf = usuario["cpf"]
         self.email = usuario["email"]
-        self.nome = "teste"
         return self
 
 

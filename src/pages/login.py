@@ -94,9 +94,7 @@ def login(n_clicks, email, senha, remember):
         raise PreventUpdate
     try:
         usuario = Usuario().buscar(email, senha)
-    except ValidationError as e:
-        return no_update, [
-            dmc.Alert(e.errors()[0]["msg"], color="red", variant="filled", mt="1rem")
-        ]
+    except AssertionError as e:
+        return no_update, [dmc.Alert(str(e), color="red", variant="filled", mt="1rem")]
     login_user(usuario, remember=remember, force=True)
     return "/user/dashboard", [no_update]
