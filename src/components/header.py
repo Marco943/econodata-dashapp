@@ -108,7 +108,12 @@ clientside_callback(
 )
 
 clientside_callback(
-    """ function(data) { return data } """,
+    """ function(data) { if (data) {
+        return data
+        } else {
+            return { colorScheme: scheme, primaryColor:"yellow" } 
+        } 
+          } """,
     Output("mantine-main-provider", "theme"),
     Input("theme-store", "data"),
 )
@@ -119,16 +124,17 @@ clientside_callback(
             if (n_clicks) {
                 const scheme = data["colorScheme"] == "dark" ? "light" : "dark"
                 return { colorScheme: scheme, primaryColor:"yellow" } 
+            } else {
+                throw window.dash_clientside.PreventUpdate
             }
-            return dash_clientside.no_update
-        } else {
-            return { colorScheme: "light", primaryColor:"yellow" }
-        }
+        } 
+        return { colorScheme: "light", primaryColor:"yellow" }
+        
     }""",
     Output("theme-store", "data"),
     Input("switch-theme", "n_clicks"),
     State("theme-store", "data"),
-    prevent_initial_call=True,
+    prevent_initial_call=False,
 )
 
 
