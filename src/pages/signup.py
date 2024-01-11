@@ -103,14 +103,22 @@ def signup_new_user(nome, sobrenome, cpf, email, senha, senha2, n):
     if not n:
         raise PreventUpdate
     try:
-        new_user = NovoUsuario(
-            nome=nome, sobrenome=sobrenome, cpf=cpf, email=email, senha=senha
+        novo_usuario = NovoUsuario(
+            nome=nome,
+            sobrenome=sobrenome,
+            cpf=cpf,
+            email=email,
+            senha=senha,
+            senha_check=senha2,
         )
+        status_registro = novo_usuario.registrar()
     except ValidationError as e:
-        erro = e.errors()[0]
-        return [dmc.Alert(erro["msg"], color="red", variant="filled")]
+        erro = e.errors()[0]["ctx"]["error"]
+        print(erro)
+        return [dmc.Alert(str(erro), color="red", variant="filled")]
+    except AssertionError as e:
+        return [dmc.Alert(str(e), color="red", variant="filled")]
 
-    status_registro = new_user.registrar()
     if status_registro:
         return [dmc.Alert("Registrado com sucesso", color="green", variant="filled")]
     else:
