@@ -10,4 +10,4 @@ COPY src ./
 RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:server
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "8", "app:server"]

@@ -163,3 +163,4 @@ src/dados/Extração Dados Econômicos.ipynb
 src/dados/compilado.parquet
 src/dados/graficos.ipynb
 .gitignore
+readme
