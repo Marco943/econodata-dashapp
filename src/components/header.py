@@ -1,5 +1,14 @@
 import dash_mantine_components as dmc
-from dash import Input, Output, Patch, State, callback, clientside_callback, html
+from dash import (
+    ClientsideFunction,
+    Input,
+    Output,
+    Patch,
+    State,
+    callback,
+    clientside_callback,
+    html,
+)
 from dash.exceptions import PreventUpdate
 from dash_iconify import DashIconify
 from flask_login import current_user, logout_user
@@ -101,36 +110,20 @@ def header_layout():
 
 
 clientside_callback(
-    """function(n_clicks) { return true }""",
+    ClientsideFunction(namespace="clientside", function_name="abrir_hamburger_menu"),
     Output("drawer-navbar", "opened"),
     Input("btn-hamburger", "n_clicks"),
     prevent_initial_call=True,
 )
 
 clientside_callback(
-    """ function(data) { if (data) {
-        return data
-        } else {
-            return { colorScheme: scheme, primaryColor:"yellow" } 
-        } 
-          } """,
+    ClientsideFunction(namespace="clientside", function_name="carregar_tema_cache"),
     Output("mantine-main-provider", "theme"),
     Input("theme-store", "data"),
 )
 
 clientside_callback(
-    """function(n_clicks, data) {
-        if (data) {
-            if (n_clicks) {
-                const scheme = data["colorScheme"] == "dark" ? "light" : "dark"
-                return { colorScheme: scheme, primaryColor:"yellow" } 
-            } else {
-                throw window.dash_clientside.PreventUpdate
-            }
-        } 
-        return { colorScheme: "light", primaryColor:"yellow" }
-        
-    }""",
+    ClientsideFunction(namespace="clientside", function_name="trocar_tema"),
     Output("theme-store", "data"),
     Input("switch-theme", "n_clicks"),
     State("theme-store", "data"),
