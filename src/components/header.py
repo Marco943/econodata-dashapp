@@ -87,7 +87,7 @@ def header_layout():
                 dmc.Col(
                     dmc.Group(
                         [
-                            html.Div(id="component-user-header"),
+                            build_user_header(),
                             dmc.ActionIcon(
                                 DashIconify(icon="gg:dark-mode", width=20),
                                 id="switch-theme",
@@ -129,11 +129,6 @@ clientside_callback(
     State("theme-store", "data"),
     prevent_initial_call=False,
 )
-
-
-@callback(Output("component-user-header", "children"), Input("url", "pathname"))
-def update_user_header(url):
-    return build_user_header()
 
 
 @callback(
