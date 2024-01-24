@@ -1,11 +1,25 @@
 import dash_mantine_components as dmc
-from dash_iconify import DashIconify
 from components.header import ALTURA_HEADER
+from dash_iconify import DashIconify
+from flask_login import current_user
 
 LARGURA_NAVBAR = 200
 
 
 def navbar_content():
+    if not current_user.is_authenticated:
+        return dmc.Center(
+            dmc.Stack(
+                [
+                    dmc.Text("Você não está logado"),
+                    dmc.Button("Faça Login"),
+                    dmc.Text("ou", align="center"),
+                    dmc.Button("Crie uma conta", variant="outline"),
+                ],
+                spacing="xs",
+            ),
+            style={"height": "100%", "width": "100%"},
+        )
     return [
         dmc.AccordionMultiple(
             [
