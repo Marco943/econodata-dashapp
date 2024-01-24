@@ -3,13 +3,13 @@
     padding-left: 20px;
 }
 
-.content {
+#content {
     margin-left: 200px;
     margin-top: 60px;
 }
 
 @media only screen and (max-width: 1200px) {
-    .content {
+    #content {
         margin-left: 0;
     }
 }

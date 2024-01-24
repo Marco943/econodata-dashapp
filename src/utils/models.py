@@ -30,7 +30,7 @@ class NovoUsuario(BaseModel):
     @classmethod
     def email_valido(cls, email: str) -> str:
         assert re.compile(
-            "([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
+            r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
         ).fullmatch(email), "Email inválido"
         return email
 
@@ -54,7 +54,7 @@ class NovoUsuario(BaseModel):
     @classmethod
     def validar_senha(cls, senha: str) -> str:
         assert re.compile(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,}$"
+            r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,}$"
         ).fullmatch(senha), "Senha fraca"
         return senha
 
