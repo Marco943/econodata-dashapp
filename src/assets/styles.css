@@ -4,13 +4,20 @@
 }
 
 #content {
-    margin-left: 200px;
-    margin-top: 60px;
+    display: flex;
+    padding-left: 240px;
+    padding-top: 120px;
 }
 
-@media only screen and (max-width: 1200px) {
+#content {
+    height: 100vh;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 900px) {
     #content {
-        margin-left: 0;
+        padding-top: 100px;
+        padding-left: 0px;
     }
 }
 

@@ -13,8 +13,8 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
         trocar_tema: function (n_clicks, data) {
             if (data) {
                 if (n_clicks) {
-                    const scheme = data["colorScheme"] == "dark" ? "light" : "dark"
-                    return { colorScheme: scheme, primaryColor: "yellow" }
+                    data.colorScheme = data.colorScheme == "dark" ? "light" : "dark"
+                    return data
                 } else {
                     throw window.dash_clientside.PreventUpdate
                 }

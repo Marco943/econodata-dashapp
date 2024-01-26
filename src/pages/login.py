@@ -20,62 +20,67 @@ from werkzeug.security import check_password_hash
 
 register_page(__name__, path="/login", title="Login")
 
-login_card = dmc.Card(
-    [
-        dmc.CardSection(
-            [
-                dmc.TextInput(
-                    id="login-in-email",
-                    type="email",
-                    label="Email",
-                    icon=DashIconify(icon="ic:round-alternate-email"),
-                ),
-                dmc.PasswordInput(
-                    id="login-in-pwd",
-                    label="Senha",
-                    icon=DashIconify(icon="carbon:password"),
-                ),
-                dmc.Checkbox(
-                    id="login-chk-remember",
-                    label="Lembar de mim",
-                    checked=False,
-                    pt="1rem",
-                ),
-                dmc.Button(
-                    "Conectar-se",
-                    id="login-btn",
-                    fullWidth=True,
-                    mt="1rem",
-                    variant="solid",
-                    n_clicks=0,
-                ),
-                dmc.Group(
-                    [
-                        dmc.Text("Não tem conta?", size=12),
-                        dmc.Anchor("Crie uma", href="/signup", size=12),
-                    ],
-                    spacing=5,
-                    position="center",
-                    mt="0.5rem",
-                ),
-                dmc.Text(id="login-feedback"),
-            ]
-        )
-    ],
-    p="1rem",
-    w=350,
-)
+
+def login_card():
+    return dmc.Card(
+        [
+            dmc.CardSection(
+                [
+                    dmc.TextInput(
+                        id="login-in-email",
+                        type="email",
+                        label="Email",
+                        icon=DashIconify(icon="ic:round-alternate-email"),
+                    ),
+                    dmc.PasswordInput(
+                        id="login-in-pwd",
+                        label="Senha",
+                        icon=DashIconify(icon="carbon:password"),
+                    ),
+                    dmc.Checkbox(
+                        id="login-chk-remember",
+                        label="Lembar de mim",
+                        checked=False,
+                        pt="1rem",
+                    ),
+                    dmc.Button(
+                        "Conectar-se",
+                        id="login-btn",
+                        fullWidth=True,
+                        mt="1rem",
+                        variant="solid",
+                        n_clicks=0,
+                    ),
+                    dmc.Group(
+                        [
+                            dmc.Text("Não tem conta?", size=12),
+                            dmc.Anchor("Crie uma", href="/signup", size=12),
+                        ],
+                        spacing=5,
+                        position="center",
+                        mt="0.5rem",
+                    ),
+                    dmc.Text(id="login-feedback"),
+                ]
+            )
+        ],
+        p="1rem",
+        w=350,
+    )
 
 
 def layout():
     if not current_user.is_authenticated:
-        return html.Div(
+        return dmc.Stack(
             [
                 dmc.Title("Bem-vindo!", order=1),
                 dmc.Text("Entre na sua conta para continuar", size="sm"),
-                login_card,
-            ]
+                login_card(),
+            ],
+            align="center",
+            justify="center",
         )
+
     else:
         return already_logged_layout
 
@@ -95,6 +100,14 @@ def login(n_clicks, email, senha, remember):
     try:
         usuario = Usuario().buscar(email, senha)
     except AssertionError as e:
-        return no_update, [dmc.Alert(str(e), color="red", variant="filled", mt="1rem")]
+        return no_update, [
+            dmc.Alert(
+                "Verifique as credenciais novamente",
+                color="red",
+                variant="outline",
+                mt="1rem",
+                title=str(e),
+            )
+        ]
     login_user(usuario, remember=remember, force=True)
     return "/user/dashboard", [no_update]

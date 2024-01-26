@@ -8,9 +8,11 @@ from dash import (
     callback,
     clientside_callback,
     html,
+    page_registry,
 )
 from dash.exceptions import PreventUpdate
 from dash_iconify import DashIconify
+from flask import request
 from flask_login import current_user, logout_user
 from icecream import ic
 
@@ -80,10 +82,26 @@ def header_layout():
                         id="col-hamburger",
                         span="content",
                     ),
-                    largerThan=1201,
+                    largerThan=901,
                     styles={"display": "none"},
                 ),
-                dmc.Col(span="auto"),
+                dmc.Col(
+                    dmc.Menu(
+                        [
+                            dmc.MenuTarget(dmc.Button("Páginas", variant="subtle")),
+                            dmc.MenuDropdown(
+                                [
+                                    dmc.MenuItem(
+                                        page["name"] + request.endpoint,
+                                        href=page["path"],
+                                    )
+                                    for page in page_registry.values()
+                                ]
+                            ),
+                        ]
+                    ),
+                    span="auto",
+                ),
                 dmc.Col(
                     dmc.Group(
                         [

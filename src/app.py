@@ -6,7 +6,6 @@ from components.navbar import drawer_navbar_layout, navbar_layout
 from dash import Dash, dcc, html, page_container
 from dotenv import load_dotenv
 from flask import Flask
-from flask_login import current_user
 from utils.models import login_manager, mongo
 
 load_dotenv(override=True)
@@ -45,8 +44,7 @@ def app_layout():
                             ],
                             fluid=True,
                             px=0,
-                        ),
-                        style={"height": "100vh"},
+                        )
                     )
                 ]
             ),

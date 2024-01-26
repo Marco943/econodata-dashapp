@@ -115,11 +115,11 @@ def signup_new_user(nome, sobrenome, cpf, email, senha, senha2, n):
     except ValidationError as e:
         erro = e.errors()[0]["ctx"]["error"]
         print(erro)
-        return [dmc.Alert(str(erro), color="red", variant="filled")]
+        return [dmc.Alert(str(erro), color="red", variant="outline")]
     except AssertionError as e:
-        return [dmc.Alert(str(e), color="red", variant="filled")]
+        return [dmc.Alert(str(e), color="red", variant="outline")]
 
     if status_registro:
-        return [dmc.Alert("Registrado com sucesso", color="green", variant="filled")]
+        return [dmc.Alert("Registrado com sucesso", color="green", variant="outline")]
     else:
-        return [dmc.Alert("Email já cadastrado", color="red", variant="filled")]
+        return [dmc.Alert("Email já cadastrado", color="red", variant="outline")]

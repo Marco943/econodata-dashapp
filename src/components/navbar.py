@@ -1,5 +1,6 @@
 import dash_mantine_components as dmc
 from components.header import ALTURA_HEADER
+from dash import dcc
 from dash_iconify import DashIconify
 from flask_login import current_user
 
@@ -11,12 +12,15 @@ def navbar_content():
         return dmc.Center(
             dmc.Stack(
                 [
-                    dmc.Text("Você não está logado"),
-                    dmc.Button("Faça Login"),
+                    dmc.Text("Você não está conectado."),
+                    dcc.Link(dmc.Button("Faça Login"), href="/login"),
                     dmc.Text("ou", align="center"),
-                    dmc.Button("Crie uma conta", variant="outline"),
+                    dcc.Link(
+                        dmc.Button("Crie uma conta", variant="outline"), href="\signup"
+                    ),
                 ],
                 spacing="xs",
+                align="center",
             ),
             style={"height": "100%", "width": "100%"},
         )
@@ -71,7 +75,7 @@ def navbar_layout():
             id="side-navbar",
             pl=0,
         ),
-        smallerThan=1201,
+        smallerThan=901,
         styles={"display": "none"},
     )
 
