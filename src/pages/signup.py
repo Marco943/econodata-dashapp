@@ -2,10 +2,9 @@ import dash_mantine_components as dmc
 from components.already_logged import already_logged_layout
 from dash import Input, Output, State, callback, html, register_page
 from dash.exceptions import PreventUpdate
-from dash_iconify import DashIconify
 from flask_login import current_user
 from pydantic import ValidationError
-from utils.models import NovoUsuario, Usuario
+from utils.models import NovoUsuario
 
 register_page(__name__, path="/signup", title="Criar uma conta")
 

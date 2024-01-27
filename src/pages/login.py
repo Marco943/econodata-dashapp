@@ -5,18 +5,13 @@ from dash import (
     Output,
     State,
     callback,
-    clientside_callback,
-    html,
     no_update,
     register_page,
 )
 from dash.exceptions import PreventUpdate
 from dash_iconify import DashIconify
 from flask_login import current_user, login_user
-from icecream import ic
-from pydantic import ValidationError
-from utils.models import Usuario, mongo
-from werkzeug.security import check_password_hash
+from utils.models import Usuario
 
 register_page(__name__, path="/login", title="Login")
 
