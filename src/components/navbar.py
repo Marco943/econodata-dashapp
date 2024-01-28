@@ -53,7 +53,7 @@ def navbar_content():
                         ),
                         dmc.AccordionPanel(
                             [
-                                dmc.NavLink(label="Notícias"),
+                                dmc.NavLink(label="Notícias", href="/user/noticias"),
                                 dmc.NavLink(label="Categorias"),
                             ]
                         ),
