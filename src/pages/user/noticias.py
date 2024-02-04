@@ -1,3 +1,5 @@
+from math import ceil
+
 import dash_mantine_components as dmc
 from dash import Input, Output, callback, html, register_page
 from utils.models import mongo
@@ -45,9 +47,8 @@ def caixa_noticia(noticia: dict):
                     ],
                     size="xs",
                     italic=True,
-                    color="gray",
+                    color="dimmed",
                 ),
-                bg="#f4f4f4",
                 px="0.5rem",
             ),
         ],
@@ -58,7 +59,7 @@ def caixa_noticia(noticia: dict):
 
 
 def layout():
-    total_noticias = round(mongo.db["Notícias"].count_documents({}) / BATELADA_NOTICIAS)
+    total_noticias = ceil(mongo.db["Notícias"].count_documents({}) / BATELADA_NOTICIAS)
     return dmc.Container(
         [
             html.Div(id="noticias-corpo"),
