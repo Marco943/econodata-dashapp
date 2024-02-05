@@ -35,6 +35,7 @@ def build_user_header():
                         dmc.MenuItem(
                             "Configurações",
                             icon=DashIconify(icon="solar:settings-bold"),
+                            href="/user/configuracoes",
                         ),
                         dmc.MenuDivider(),
                         dmc.MenuItem(
