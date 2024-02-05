@@ -1,15 +1,18 @@
 import re
 from typing import Any, Optional
 
-from flask_login import LoginManager, UserMixin, login_user
+from flask_login import LoginManager, UserMixin
+from flask_mail import Mail
 from flask_pymongo import ObjectId, PyMongo
-from pydantic import BaseModel, ValidationError, computed_field, field_validator
+from pydantic import BaseModel, computed_field, field_validator
 from werkzeug.security import check_password_hash, generate_password_hash
 
 mongo = PyMongo()
 
 login_manager = LoginManager()
 login_manager.login_view = "/"
+
+mail = Mail()
 
 
 class NovoUsuario(BaseModel):
