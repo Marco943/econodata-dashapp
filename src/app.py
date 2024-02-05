@@ -6,16 +6,16 @@ from components.navbar import drawer_navbar_layout, navbar_layout
 from dash import Dash, dcc, html, page_container
 from dotenv import load_dotenv
 from flask import Flask
-from utils.models import login_manager, mongo
+from utils.models import login_manager, mail, mongo
 
 load_dotenv(override=True)
 
 server = Flask(__name__)
-server.config.update(SECRET_KEY=os.environ.get("SECRET_KEY"))
-server.config.update(MONGO_URI=os.environ.get("DB_ECONODATA"))
+server.config.from_prefixed_env()
 
 mongo.init_app(server)
 login_manager.init_app(server)
+mail.init_app(server)
 
 app = Dash(
     use_pages=True,
