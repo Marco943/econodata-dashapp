@@ -24,6 +24,7 @@ app = Dash(
     update_title=None,
     server=server,
     prevent_initial_callbacks=True,
+    external_scripts=["https://cdn.plot.ly/plotly-locale-pt-br-latest.js"],
 )
 
 
@@ -33,20 +34,16 @@ def app_layout():
             dcc.Store(id="theme-store", storage_type="local"),
             dcc.Location(id="url", refresh=True),
             dmc.NotificationsProvider(
-                [
-                    html.Div(
-                        dmc.Container(
-                            [
-                                header_layout(),
-                                navbar_layout(),
-                                drawer_navbar_layout(),
-                                html.Div(page_container, id="content"),
-                            ],
-                            fluid=True,
-                            px=0,
-                        )
-                    )
-                ]
+                children=dmc.Container(
+                    [
+                        header_layout(),
+                        navbar_layout(),
+                        drawer_navbar_layout(),
+                        html.Div(page_container, id="content"),
+                    ],
+                    fluid=True,
+                    px=0,
+                )
             ),
         ],
         theme={"colorScheme": "light", "primaryColor": "yellow"},
