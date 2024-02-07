@@ -6,7 +6,7 @@ import polars as pl
 from components.no_permission import no_permission_layout
 from dash import dcc, html, register_page
 from flask_login import current_user
-from utils.models import mongo
+from utils.models import graph_configs, mongo
 
 register_page(__name__, path="/user/dashboard", title="Dashboard")
 
@@ -28,9 +28,10 @@ def layout():
         ]
     )
 
-    return html.Div(
-        [
-            dcc.Graph(figure=fig),
-            html.Div([dmc.Text("Dashboard")], className="content"),
-        ]
+    return dmc.Container(
+        fluid=True,
+        children=[
+            dmc.Title("Dashboard", order=1, weight=500, mb="1rem"),
+            dcc.Graph(figure=fig, animate=True, config=graph_configs),
+        ],
     )
