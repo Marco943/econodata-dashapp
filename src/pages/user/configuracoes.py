@@ -1,3 +1,5 @@
+import os
+
 import dash_mantine_components as dmc
 from dash import Input, Output, State, callback, register_page
 from dash.exceptions import PreventUpdate
@@ -28,9 +30,9 @@ def enviar_email(n, email, texto):
     if not n:
         raise PreventUpdate
     msg = Message(
-        "Olá",
+        "Teste flask email automatizado",
         body=texto,
-        sender="macto.14@gmail.com",
+        sender=os.environ["FLASK_MAIL_USERNAME"],
         recipients=[email],
     )
     mail.send(msg)
