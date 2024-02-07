@@ -121,3 +121,6 @@ def load_user(user_id):
     if not user:
         return None
     return Usuario(**user)
+
+
+graph_configs = {"displayModeBar": False, "displaylogo": False, "locale": "pt-BR"}
