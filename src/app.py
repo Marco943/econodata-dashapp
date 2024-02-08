@@ -18,13 +18,18 @@ login_manager.init_app(server)
 mail.init_app(server)
 
 app = Dash(
+    __name__,
     use_pages=True,
     suppress_callback_exceptions=True,
     title="App Econodata",
     update_title=None,
     server=server,
     prevent_initial_callbacks=True,
-    external_scripts=["https://cdn.plot.ly/plotly-locale-pt-br-latest.js"],
+    external_scripts=[
+        "https://cdn.plot.ly/plotly-locale-pt-br-latest.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/dayjs.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.10/locale/pt-br.min.js",
+    ],
 )
 
 
