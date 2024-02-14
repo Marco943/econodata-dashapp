@@ -10,52 +10,67 @@ BATELADA_NOTICIAS = 5
 
 
 def caixa_noticia(noticia: dict):
-    return dmc.Anchor(
-        href=noticia["url"],
-        underline=False,
-        target="_blank",
-        children=dmc.Card(
-            [
-                dmc.CardSection(
-                    dmc.Grid(
-                        [
-                            dmc.Col(
-                                dmc.Image(
-                                    src=noticia.get("img", None),
-                                    width=150,
-                                    height=80,
-                                    withPlaceholder=True,
-                                    display="block",
+    return dmc.Paper(
+        h=80,
+        mb="1rem",
+        withBorder=True,
+        children=dmc.Anchor(
+            href=noticia["url"],
+            underline=False,
+            target="_blank",
+            children=dmc.Grid(
+                m=0,
+                h=80,
+                children=[
+                    dmc.Col(
+                        span="content",
+                        bg="yellow",
+                        c="white",
+                        children=[
+                            dmc.Text(
+                                children=noticia["dt"].strftime("%d %b"),
+                                weight=100,
+                                size="lg",
+                            ),
+                            dmc.Text(
+                                children=noticia["dt"].strftime("%H:%M"),
+                                weight=600,
+                                size="lg",
+                            ),
+                        ],
+                    ),
+                    dmc.Col(
+                        span="content",
+                        p=0,
+                        children=dmc.Image(
+                            src=noticia.get("img", None),
+                            width=150,
+                            height=80,
+                            withPlaceholder=True,
+                            display="block",
+                        ),
+                    ),
+                    dmc.Col(
+                        span="auto",
+                        children=dmc.Text(
+                            children=[
+                                dmc.Anchor(
+                                    children=noticia["mat"],
+                                    href=noticia["url"],
+                                    size="lg",
+                                    weight=600,
                                 ),
-                                span="content",
-                                p=0,
-                            ),
-                            dmc.Col(
-                                dmc.Text(noticia["mat"], size="lg"),
-                                span="auto",
-                            ),
-                        ],
-                        m=0,
+                                dmc.Text(
+                                    children=f'Fonte: {noticia["f"]}',
+                                    color="dimmed",
+                                    italic=True,
+                                    size="xs",
+                                ),
+                            ],
+                        ),
                     ),
-                    withBorder=True,
-                ),
-                dmc.CardSection(
-                    dmc.Text(
-                        [
-                            noticia["f"].upper(),
-                            " - ",
-                            noticia["dt"].strftime("%d/%m/%Y %H:%M"),
-                        ],
-                        size="xs",
-                        italic=True,
-                        color="dimmed",
-                    ),
-                    px="0.5rem",
-                ),
-            ],
-            radius="md",
-            withBorder=True,
-            mb="1rem",
+                ],
+            ),
         ),
     )
 
@@ -69,8 +84,8 @@ def layout():
                 height=572,
                 visible=False,
                 width="100%",
-                children=html.Div(id="noticias-corpo", style={"width": "100%"}),
                 mb="1rem",
+                children=html.Div(id="noticias-corpo", style={"width": "100%"}),
             ),
             dmc.Pagination(total=total_noticias, id="noticias-nav", page=1),
         ]
