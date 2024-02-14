@@ -1,3 +1,4 @@
+import locale
 import os
 
 import dash_mantine_components as dmc
@@ -6,7 +7,9 @@ from components.navbar import drawer_navbar_layout, navbar_layout
 from dash import Dash, dcc, html, page_container
 from dotenv import load_dotenv
 from flask import Flask
-from utils.models import login_manager, mail, mongo
+from utils.models import cache, login_manager, mail, mongo
+
+locale.setlocale(locale.LC_ALL, "pt_br.utf8")
 
 load_dotenv(override=True)
 
@@ -16,6 +19,7 @@ server.config.from_prefixed_env()
 mongo.init_app(server)
 login_manager.init_app(server)
 mail.init_app(server)
+cache.init_app(server)
 
 app = Dash(
     __name__,
