@@ -1,11 +1,16 @@
 from datetime import datetime
 
+import orjson
 import plotly.graph_objects as go
 import polars as pl
-from utils.models import mongo
+from utils.models import cache, mongo
+
+with open("src/assets/metadados.json", "rb") as f:
+    METADADOS_BCB = orjson.loads(f.read())
 
 
-def baixar_dados_bcb(
+@cache.memoize()
+def mongo_dados_bcb(
     codigo: int, data_inicial: datetime, data_final: datetime
 ) -> tuple[str, pl.DataFrame]:
     dados = pl.DataFrame(
@@ -14,7 +19,8 @@ def baixar_dados_bcb(
             {"_id": 0, "d": 1, "v": 1},
         )
     )
-    return "_nome_indicador_", dados
+    nome = [metadado["n"] for metadado in METADADOS_BCB if metadado["c"] == codigo][0]
+    return nome, dados
 
 
 CONFIGS_PLOTLY = {"displayModeBar": False, "displaylogo": False, "locale": "pt-BR"}
@@ -49,9 +55,14 @@ TEMPLATE_PLOTLY = go.layout.Template(
         legend=go.layout.Legend(
             title=go.layout.legend.Title(
                 font=go.layout.legend.title.Font(color="gray", size=12)
-            )
+            ),
+            orientation="h",
+            y=1,
+            x=0.5,
+            yanchor="bottom",
+            xanchor="center",
         ),
-        hovermode="x",
+        hovermode="x unified",
         hoverlabel=go.layout.Hoverlabel(
             bgcolor="#fff",
             bordercolor="#ffe066",
