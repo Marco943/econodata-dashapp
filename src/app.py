@@ -4,7 +4,16 @@ import os
 import dash_mantine_components as dmc
 from components.header import header_layout
 from components.navbar import drawer_navbar_layout, navbar_layout
-from dash import Dash, dcc, html, page_container
+from dash import (
+    ClientsideFunction,
+    Dash,
+    Input,
+    Output,
+    clientside_callback,
+    dcc,
+    html,
+    page_container,
+)
 from dotenv import load_dotenv
 from flask import Flask
 from utils.models import cache, login_manager, mail, mongo
@@ -40,6 +49,8 @@ app = Dash(
 def app_layout():
     return dmc.MantineProvider(
         [
+            dcc.Store(id="login-data", data=0),
+            dcc.Store(id="refresh", data=0),
             dcc.Store(id="theme-store", storage_type="local"),
             dcc.Location(id="url", refresh=True),
             dmc.NotificationsProvider(
@@ -64,6 +75,13 @@ def app_layout():
 
 
 app.layout = app_layout
+
+clientside_callback(
+    ClientsideFunction("clientside", "atualizar_pagina"),
+    Output("refresh", "data"),
+    Input("refresh", "data"),
+    prevent_initial_call=True,
+)
 
 if __name__ == "__main__":
     # app.run(debug=True)

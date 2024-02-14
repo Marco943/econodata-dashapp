@@ -117,7 +117,6 @@ def header_layout():
                     ),
                     span="content",
                 ),
-                html.Div(id="timer-logout"),
             ],
             justify="space-between",
             align="center",
@@ -150,7 +149,7 @@ clientside_callback(
 
 
 @callback(
-    Output("timer-logout", "children", allow_duplicate=True),
+    Output("refresh", "data", allow_duplicate=True),
     Input("logout-header-btn", "n_clicks"),
     prevent_initial_call=True,
 )
@@ -158,6 +157,6 @@ def logout(n_clicks):
     if n_clicks:
         logout_user()
         # Força um refresh
-        return html.Meta(httpEquiv="refresh", content=0.1)
+        return 1
     else:
         raise PreventUpdate

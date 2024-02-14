@@ -21,6 +21,10 @@ window.dash_clientside = Object.assign({}, window.dash_clientside, {
             // this.trocar_tema_plotly(data.colorScheme);
             return data
         },
+        atualizar_pagina: function (_) {
+            location.reload();
+            throw window.dash_clientside.PreventUpdate;
+        },
 
         // trocar_tema_plotly: function (colorScheme) {
         //     document.querySelectorAll('.js-plotly-plot').forEach(
