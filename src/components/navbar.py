@@ -16,7 +16,7 @@ def navbar_content():
                     dcc.Link(dmc.Button("Faça Login"), href="/login"),
                     dmc.Text("ou", align="center"),
                     dcc.Link(
-                        dmc.Button("Crie uma conta", variant="outline"), href="\signup"
+                        dmc.Button("Crie uma conta", variant="outline"), href="/signup"
                     ),
                 ],
                 spacing="xs",
@@ -36,7 +36,10 @@ def navbar_content():
                         dmc.AccordionPanel(
                             [
                                 dmc.NavLink(label="Mercado"),
-                                dmc.NavLink(label="Macroeconomia"),
+                                dmc.NavLink(
+                                    label="Macroeconomia",
+                                    href="/user/dashboard/macroeconomia",
+                                ),
                                 dmc.NavLink(label="Setor Externo"),
                                 dmc.NavLink(label="Analises"),
                                 dmc.NavLink(label="Visão Geral"),

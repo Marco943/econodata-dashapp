@@ -146,7 +146,6 @@ clientside_callback(
     Output("theme-store", "data"),
     Input("switch-theme", "n_clicks"),
     State("theme-store", "data"),
-    prevent_initial_call=False,
 )
 
 

@@ -12,7 +12,9 @@ def layout(next=None):
             dmc.Title(f"Olá, {current_user.nome}", order=1),
             dmc.Group(
                 [
-                    dmc.Anchor("Acesse o Dashboard", href="/user/dashboard"),
+                    dmc.Anchor(
+                        "Acesse o Dashboard", href="/user/dashboard/macroeconomia"
+                    ),
                 ],
                 spacing=5,
                 mt="1rem",
