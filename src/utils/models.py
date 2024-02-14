@@ -1,6 +1,7 @@
 import re
 from typing import Any, Optional
 
+from flask_caching import Cache
 from flask_login import LoginManager, UserMixin
 from flask_mail import Mail
 from flask_pymongo import ObjectId, PyMongo
@@ -13,6 +14,8 @@ login_manager = LoginManager()
 login_manager.login_view = "/"
 
 mail = Mail()
+
+cache = Cache()
 
 
 class NovoUsuario(BaseModel):
