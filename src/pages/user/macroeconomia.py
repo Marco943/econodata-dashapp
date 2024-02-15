@@ -19,20 +19,33 @@ def layout():
         fluid=True,
         children=[
             dmc.Title(children="Dashboard", order=1, weight=500, mb="1rem"),
-            dmc.MultiSelect(
-                id="select-indicadores-dash",
-                label="Indicador",
-                clearable=True,
-                data=[
-                    {
-                        "value": indicador["c"],
-                        "label": f"{indicador['n']} ({indicador['f']})",
-                    }
-                    for indicador in METADADOS_BCB
+            dmc.Grid(
+                children=[
+                    dmc.Col(
+                        span="auto",
+                        children=dmc.MultiSelect(
+                            id="select-indicadores-dash",
+                            label="Indicador",
+                            clearable=True,
+                            data=[
+                                {
+                                    "value": indicador["c"],
+                                    "label": f"{indicador['n']} ({indicador['f']})",
+                                }
+                                for indicador in METADADOS_BCB
+                            ],
+                            placeholder="Selecione um indicador",
+                        ),
+                    ),
+                    dmc.Col(
+                        span="content",
+                        children=dmc.Button(
+                            id="btn-gerar-grafico-dash", children="Gerar gráfico"
+                        ),
+                    ),
                 ],
-                placeholder="Selecione um indicador",
+                align="end",
             ),
-            dmc.Button(id="btn-gerar-grafico-dash", children="Gerar gráfico"),
             dcc.Graph(
                 figure=go.Figure(layout=go.Layout(template=TEMPLATE_PLOTLY)),
                 id="graph-grafico-dash",
