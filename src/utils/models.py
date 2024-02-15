@@ -5,7 +5,7 @@ from flask_caching import Cache
 from flask_login import LoginManager, UserMixin
 from flask_mail import Mail
 from flask_pymongo import ObjectId, PyMongo
-from pydantic import BaseModel, computed_field, field_validator
+from pydantic import BaseModel, Field, computed_field, field_validator
 from werkzeug.security import check_password_hash, generate_password_hash
 
 mongo = PyMongo()
@@ -89,18 +89,22 @@ class NovoUsuario(BaseModel):
 
 
 class Usuario(BaseModel, UserMixin):
-    _id: Optional[ObjectId] = None
-    nome: Optional[str] = None
-    sobrenome: Optional[str] = None
-    cpf: Optional[str] = None
-    email: Optional[str] = None
+    id_: ObjectId = Field(alias="_id")
+    nome: str
+    sobrenome: str
+    cpf: str
+    email: str
+
+    class Config:
+        arbitrary_types_allowed = True
 
     @computed_field
     @property
     def id(self) -> str:
-        return str(self._id)
+        return str(self.id_)
 
-    def buscar(self, email: str, senha: str):
+    @classmethod
+    def buscar(cls, email: str, senha: str):
         assert email != "" and senha != "", "Preencha todos os campos"
         usuario = mongo.db["Users"].find_one(
             {"email": email},
@@ -108,12 +112,33 @@ class Usuario(BaseModel, UserMixin):
         )
         assert usuario, "Usuário não encontrado"
         assert check_password_hash(usuario["senha"], senha), "Senha incorreta"
-        self._id = usuario["_id"]
-        self.nome = usuario["nome"]
-        self.sobrenome = usuario["sobrenome"]
-        self.cpf = usuario["cpf"]
-        self.email = usuario["email"]
-        return self
+
+        return cls(**usuario)
+
+    def alterar_senha(
+        self, senha_atual: str, senha_nova: str, senha_nova_check: str
+    ) -> bool:
+        senha_hash = mongo.db["Users"].find_one(
+            {"_id": self.id_}, {"_id": 0, "senha_hash": 1}
+        )["senha_hash"]
+        assert check_password_hash(
+            senha_hash, senha_atual
+        ), "A senha atual não está correta."
+
+        assert not check_password_hash(
+            senha_hash, senha_nova
+        ), "A senha nova não pode ser igual à senha atual."
+
+        assert (
+            senha_nova == senha_nova_check
+        ), "As senhas novas inseridas não são iguais."
+
+        r = mongo.db["Users"].update_one(
+            {"_id": self.id_},
+            {"$set": {"senha_hash": generate_password_hash(senha_nova)}},
+        )
+        assert r.acknowledged, "Ocorreu algum problema, tente novamente mais tarde."
+        return True
 
 
 @login_manager.user_loader

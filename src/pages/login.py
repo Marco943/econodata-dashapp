@@ -93,7 +93,7 @@ def login(n_clicks, email, senha, remember):
     if not n_clicks:
         raise PreventUpdate
     try:
-        usuario = Usuario().buscar(email, senha)
+        usuario = Usuario.buscar(email, senha)
     except AssertionError as e:
         return no_update, [
             dmc.Alert(
