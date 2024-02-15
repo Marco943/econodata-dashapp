@@ -6,71 +6,76 @@ from utils.models import mongo
 
 register_page(__name__, path="/user/noticias", title="Notícias")
 
-BATELADA_NOTICIAS = 5
+BATELADA_NOTICIAS = 10
 
 
 def caixa_noticia(noticia: dict):
-    return dmc.Paper(
+    return dmc.Card(
         h=80,
-        mb="1rem",
+        mb=20,
         withBorder=True,
-        children=dmc.Anchor(
-            href=noticia["url"],
-            underline=False,
-            target="_blank",
-            children=dmc.Grid(
-                m=0,
-                h=80,
-                children=[
-                    dmc.Col(
-                        span="content",
-                        bg="yellow",
-                        c="white",
-                        children=[
-                            dmc.Text(
-                                children=noticia["dt"].strftime("%d %b"),
-                                weight=100,
-                                size="lg",
-                            ),
-                            dmc.Text(
-                                children=noticia["dt"].strftime("%H:%M"),
-                                weight=600,
-                                size="lg",
-                            ),
-                        ],
-                    ),
-                    dmc.Col(
-                        span="content",
-                        p=0,
-                        children=dmc.Image(
-                            src=noticia.get("img", None),
-                            width=150,
-                            height=80,
-                            withPlaceholder=True,
-                            display="block",
-                        ),
-                    ),
-                    dmc.Col(
-                        span="auto",
-                        children=dmc.Text(
+        children=dmc.CardSection(
+            dmc.Anchor(
+                href=noticia["url"],
+                underline=False,
+                target="_blank",
+                children=dmc.Grid(
+                    m=0,
+                    h=80,
+                    children=[
+                        dmc.Col(
+                            span="content",
+                            bg="yellow",
+                            c="white",
                             children=[
-                                dmc.Anchor(
-                                    children=noticia["mat"],
-                                    href=noticia["url"],
+                                dmc.Text(
+                                    children=noticia["dt"].strftime("%d %b"),
+                                    weight=100,
                                     size="lg",
-                                    weight=600,
                                 ),
                                 dmc.Text(
-                                    children=f'Fonte: {noticia["f"]}',
-                                    color="dimmed",
-                                    italic=True,
-                                    size="xs",
+                                    children=noticia["dt"].strftime("%H:%M"),
+                                    weight=600,
+                                    size="lg",
                                 ),
                             ],
                         ),
-                    ),
-                ],
-            ),
+                        dmc.Col(
+                            span="content",
+                            p=0,
+                            children=dmc.Image(
+                                src=noticia.get("img", None),
+                                width=140,
+                                height=80,
+                                withPlaceholder=True,
+                                display="block",
+                            ),
+                        ),
+                        dmc.Col(
+                            span="auto",
+                            children=dmc.Text(
+                                children=[
+                                    dmc.Anchor(
+                                        children=noticia["mat"],
+                                        href=noticia["url"],
+                                        size="lg",
+                                        weight=600,
+                                        target="_blank",
+                                        span=True,
+                                    ),
+                                    dmc.Text(
+                                        children=f' • {noticia["f"]}',
+                                        color="dimmed",
+                                        italic=True,
+                                        size="xs",
+                                        span=True,
+                                    ),
+                                ],
+                            ),
+                        ),
+                    ],
+                ),
+            )
         ),
     )
 
@@ -81,7 +86,7 @@ def layout():
         [
             dmc.Title("Notícias", order=1, weight=500, mb="1rem"),
             dmc.Skeleton(
-                height=572,
+                height=100 * BATELADA_NOTICIAS,
                 visible=False,
                 width="100%",
                 mb="1rem",
