@@ -83,6 +83,7 @@ def layout():
 @callback(
     Output("url", "pathname", allow_duplicate=True),
     Output("login-feedback", "children"),
+    Output("login-data", "data"),
     Input("login-btn", "n_clicks"),
     State("login-in-email", "value"),
     State("login-in-pwd", "value"),
@@ -95,14 +96,18 @@ def login(n_clicks, email, senha, remember):
     try:
         usuario = Usuario.buscar(email, senha)
     except AssertionError as e:
-        return no_update, [
-            dmc.Alert(
-                "Verifique as credenciais novamente",
-                color="red",
-                variant="outline",
-                mt="1rem",
-                title=str(e),
-            )
-        ]
+        return (
+            no_update,
+            [
+                dmc.Alert(
+                    "Verifique as credenciais novamente",
+                    color="red",
+                    variant="outline",
+                    mt="1rem",
+                    title=str(e),
+                )
+            ],
+            no_update,
+        )
     login_user(usuario, remember=remember, force=True)
-    return "/user/dashboard", [no_update]
+    return "/user/dashboard", [no_update], 1

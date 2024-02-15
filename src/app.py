@@ -49,7 +49,6 @@ app = Dash(
 def app_layout():
     return dmc.MantineProvider(
         [
-            dcc.Store(id="login-data", data=0),
             dcc.Store(id="refresh", data=0),
             dcc.Store(id="theme-store", storage_type="local"),
             dcc.Location(id="url", refresh=True),
