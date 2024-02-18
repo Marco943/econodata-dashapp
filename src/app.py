@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from utils.models import cache, login_manager, mail, mongo
 
-locale.setlocale(locale.LC_ALL, "pt_br.utf8")
+locale.setlocale(locale.LC_ALL, "pt_BR.utf8")
 
 load_dotenv(override=True)
 
