@@ -1,0 +1,6 @@
+.js-plotly-plot .bglayer rect {
+    rx: 5px;
+    ry: 5px;
+    stroke: #ced4da;
+    stroke-width: 1px !important;
+}
