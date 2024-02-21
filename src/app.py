@@ -74,6 +74,7 @@ def app_layout():
 
 
 app.layout = app_layout
+app.enable_dev_tools(debug=True)
 
 clientside_callback(
     ClientsideFunction("clientside", "atualizar_pagina"),
