@@ -34,19 +34,20 @@ TEMPLATE_PLOTLY = go.layout.Template(
         font=go.layout.Font(
             family="BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji"
         ),
-        plot_bgcolor="#ededed",
+        plot_bgcolor="#fff",
+        paper_bgcolor="rgba(0,0,0,0)",
         xaxis=go.layout.XAxis(
-            gridcolor="#FFF",
-            minor=go.layout.xaxis.Minor(gridcolor="#FFF"),
-            zerolinecolor="#FFF",
+            gridcolor="#f3f3f3",
+            minor=go.layout.xaxis.Minor(gridcolor="#f3f3f3"),
+            zerolinecolor="#bbb",
             zerolinewidth=2,
             titlefont=go.layout.xaxis.title.Font(color="#000"),
             tickfont=go.layout.xaxis.Tickfont(color="gray"),
         ),
         yaxis=go.layout.YAxis(
-            gridcolor="#FFF",
-            minor=go.layout.yaxis.Minor(gridcolor="#FFF"),
-            zerolinecolor="#FFF",
+            gridcolor="#f3f3f3",
+            minor=go.layout.yaxis.Minor(gridcolor="#f3f3f3"),
+            zerolinecolor="#bbb",
             zerolinewidth=2,
             titlefont=go.layout.yaxis.title.Font(color="#000"),
             tickfont=go.layout.yaxis.Tickfont(color="gray"),
